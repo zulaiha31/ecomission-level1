@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMission - Level 1: Kenali Lingkunganmu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e0f7fa;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #objects {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .object {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            border: 2px solid #00796b;
+            border-radius: 10px;
+            background-size: cover;
+            background-position: center;
+            cursor: grab;
+        }
+
+        #categories {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .category {
+            width: 200px;
+            height: 300px;
+            border: 2px dashed #004d40;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #b2dfdb;
+        }
+
+        .category h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>EcoMission: Kenali Lingkunganmu</h1>
+    <div id="game-container">
+        <div id="objects">
+            <!-- Gambar objek akan ditambahkan di sini -->
+        </div>
+        <div id="categories">
+            <div id="biotic" class="category">
+                <h2>Biotik</h2>
+            </div>
+            <div id="abiotic" class="category">
+                <h2>Abiotik</h2>
+            </div>
+        </div>
+    </div>
+    <script>
+        const objects = [
+            { name: 'Tupai', type: 'biotic', image: 'images/tupai.png' },
+            { name: 'Pohon', type: 'biotic', image: 'images/pohon.png' },
+            { name: 'Serangga', type: 'biotic', image: 'images/serangga.png' },
+            { name: 'Air', type: 'abiotic', image: 'images/air.png' },
+            { name: 'Matahari', type: 'abiotic', image: 'images/matahari.png' },
+            { name: 'Batu', type: 'abiotic', image: 'images/batu.png' },
+            { name: 'Angin', type: 'abiotic', image: 'images/angin.png' },
+        ];
+
+        const objectsContainer = document.getElementById('objects');
+        const bioticCategory = document.getElementById('biotic');
+        const abioticCategory = document.getElementById('abiotic');
+
+        objects.forEach((obj, index) => {
+            const div = document.createElement('div');
+            div.classList.add('object');
+            div.style.backgroundImage = `url(${obj.image})`;
+            div.setAttribute('draggable', true);
+            div.setAttribute('data-type', obj.type);
+            div.setAttribute('id', `object-${index}`);
+
+            div.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.id);
+            });
+
+            objectsContainer.appendChild(div);
+        });
+
+        [bioticCategory, abioticCategory].forEach(category => {
+            category.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            category.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text/plain');
+                const draggedElement = document.getElementById(id);
+                const objectType = draggedElement.getAttribute('data-type');
+                const categoryType = category.id;
+
+                if ((objectType === 'biotic' && categoryType === 'biotic') ||
+                    (objectType === 'abiotic' && categoryType === 'abiotic')) {
+                    category.appendChild(draggedElement);
+                    alert('Benar!');
+                } else {
+                    alert('Salah! Coba lagi.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
